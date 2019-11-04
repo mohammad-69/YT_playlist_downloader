@@ -17,7 +17,33 @@
 # later version.
 
 
-read -p "Enter Your YouTube Playlist Id like "PL4cUxeGkcC9jBcybHMTIia56aV21o2cZ8" :> "  ID
-echo "Starting to download your playlist \n\n"
+read -p "Choose what type of media you want to downlaod from youtube, audio or video ? "  Media_Type
 
-youtube-dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' $ID
+if [ $Media_Type = "audio" ]; then
+        echo "Do you want to download a single video file or playlist? \n\t"
+            read -p "Enter 'single' or 'list' " YT_AUD_TYPE
+        if [ $YT_AUD_TYPE = "single" ];then
+            read -p "Enter Youtube address of your media like: 'https://www.youtube.com/watch?v=jwD4AEVBL6Q' "  YT_AUD_SINGLE_ADDRS
+            echo "Starting to download your single audio file: \n\n"
+            youtube-dl -o '%(alt_title)s.%(ext)s' -x --audio-format mp3 $YT_AUD_SINGLE_ADDRS
+          else
+            echo "Enter Youtube address of your media playlist id for example: \n  Original url: 'https://www.youtube.com/watch?v=IrclKk_nWHI&list=PLXmMXHVSvS-DvYEVy6JQUAjannaohHXRV' \n "
+            read -p "  Playlist id is: 'PLXmMXHVSvS-DvYEVy6JQUAjannaohHXRV' " YT_AUD_LIST_ADDRS
+            echo "Starting to download your playlist: \n\n"
+            youtube-dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' -x --audio-format mp3 $YT_AUD_LIST_ADDRS
+    fi
+else
+    echo "Do you want to download a single video file or playlist? \n\t"
+    read -p "Enter 'single' or 'list' " YT_VID_TYPE
+    if [ $YT_VID_TYPE = "single" ];then
+        read -p "Enter Youtube address of your media like: 'https://www.youtube.com/watch?v=jwD4AEVBL6Q' "  YT_VID_SINGLE_ADDRS
+        echo "Starting to download your single video file: \n\n"
+        youtube-dl -o '%(alt_title)s.%(ext)s' $YT_VID_SINGLE_ADDRS
+    else
+            echo "Enter Youtube address of your media playlist id for example: \n  Original url: 'https://www.youtube.com/watch?v=IrclKk_nWHI&list=PLXmMXHVSvS-DvYEVy6JQUAjannaohHXRV' \n "
+            read -p "  Playlist id is: 'PLXmMXHVSvS-DvYEVy6JQUAjannaohHXRV' " YT_VID_LIST_ADDRS
+            echo "Starting to download your playlist: \n\n"
+            youtube-dl -o '%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s' $YT_VID_LIST_ADDRS
+    fi
+fi
+
